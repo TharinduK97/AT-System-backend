@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using hp_proj_1_backend.Data;
 using hp_proj_1_backend.Dtos.JobDtos;
 using hp_proj_1_backend.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace hp_proj_1_backend.Services.JobService
@@ -14,17 +16,25 @@ namespace hp_proj_1_backend.Services.JobService
     {
         private readonly IMapper _mapper;
         private readonly DataContext _context;
-        public JobService(IMapper mapper, DataContext context)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public JobService(IMapper mapper, DataContext context, IHttpContextAccessor httpContextAccessor)
         {
+            _httpContextAccessor = httpContextAccessor;
             _context = context;
             _mapper = mapper;
 
         }
-        public async Task<ServiceResponse<List<GetJobDto>>> AddJob(AddJobDto newJob)
+
+        private int GetUserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+        private string GetUserRole() => _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Role);
+
+
+            public async Task<ServiceResponse<List<GetJobDto>>> AddJob(AddJobDto newJob)
         {
             var serviceResponse = new ServiceResponse<List<GetJobDto>>();
             Job job = _mapper.Map<Job>(newJob);
-            // character.User = await _context.Users.FirstOrDefaultAsync(u => u.Id == GetUserId());
+                job.User = await _context.Users.FirstOrDefaultAsync(u => u.ID == GetUserId());
 
             _context.Jobs.Add(job);
             await _context.SaveChangesAsync();
@@ -68,9 +78,8 @@ namespace hp_proj_1_backend.Services.JobService
         {
             var serviceResponse = new ServiceResponse<List<GetJobDto>>();
             var dbJobs = await _context.Jobs.ToListAsync();
-                // .Include(c => c.Weapon)
-                // .Include(c => c.Skills)
-                // .Where(c => c.User.Id == GetUserId()).ToListAsync();
+
+            // .Where(c => c.User.Id == GetUserId()).ToListAsync();
             serviceResponse.Data = dbJobs.Select(c => _mapper.Map<GetJobDto>(c)).ToList();
             return serviceResponse;
         }
@@ -79,10 +88,9 @@ namespace hp_proj_1_backend.Services.JobService
         {
             var serviceResponse = new ServiceResponse<GetJobDto>();
             var dbJob = await _context.Jobs
-                // .Include(c => c.Weapon)
-                .Include(c => c.Skills)
-                // .FirstOrDefaultAsync(c => c.Id == id && c.User.Id == GetUserId());
-                 .FirstOrDefaultAsync();
+
+                 .FirstOrDefaultAsync(c => c.ID == id);
+
             serviceResponse.Data = _mapper.Map<GetJobDto>(dbJob);
             return serviceResponse;
         }
@@ -93,16 +101,17 @@ namespace hp_proj_1_backend.Services.JobService
             try
             {
                 Job job = await _context.Jobs
-                    // .Include(c => c.User)
+                     .Include(c => c.User)
                     .FirstOrDefaultAsync(c => c.ID == updatedJob.ID);
-                if (/*job.User.Id == GetUserId()*/true)
+                if (job.User.Role == GetUserRole())
                 {
-                    // job.Name = updatedJob.Name;
-                    // job.HitPoints = updatedJob.HitPoints;
-                    // job.Strength = updatedJob.Strength;
-                    // job.Defense = updatedJob.Defense;
-                    // job.Intelligence = updatedJob.Intelligence;
-                    // job.Class = updatedJob.Class;
+                    job.Title = updatedJob.Title;
+                    job.Skills = updatedJob.Skills;
+                    job.Salary = updatedJob.Salary;
+                    job.Description = updatedJob.Description;
+                    job.JobStatus = updatedJob.JobStatus;
+                    job.LimitLine = updatedJob.LimitLine;
+                     job.FullPart = updatedJob.FullPart;
 
                     await _context.SaveChangesAsync();
                     serviceResponse.Data = _mapper.Map<GetJobDto>(job);

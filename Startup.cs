@@ -8,6 +8,7 @@ using hp_proj_1_backend.Services.JobService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace hp_proj_1_backend
 {
@@ -46,7 +48,7 @@ namespace hp_proj_1_backend
                     Name = "Authorization",
                     Type = SecuritySchemeType.ApiKey
                 });
-                
+                 c.OperationFilter<SecurityRequirementsOperationFilter>();
             });
             services.AddAutoMapper(typeof(Startup));
              services.AddScoped<IJobService, JobService>();
@@ -62,6 +64,7 @@ namespace hp_proj_1_backend
                         ValidateAudience = false
                     };
                 });
+                services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
