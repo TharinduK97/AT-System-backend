@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using hp_proj_1_backend.Data;
 
 namespace hp_proj_1_backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210530201817_user")]
+    partial class user
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,19 +55,19 @@ namespace hp_proj_1_backend.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("UserID")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Jobs");
                 });
 
             modelBuilder.Entity("hp_proj_1_backend.Models.User", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .UseIdentityColumn();
@@ -101,26 +103,24 @@ namespace hp_proj_1_backend.Migrations
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Role")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("Applicant");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Skills")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("WorkExperience")
-                        .HasColumnType("int");
+                    b.Property<string>("WorkExperience")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("hp_proj_1_backend.Models.Job", b =>
                 {
                     b.HasOne("hp_proj_1_backend.Models.User", "User")
                         .WithMany("Jobs")
-                        .HasForeignKey("UserID");
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });

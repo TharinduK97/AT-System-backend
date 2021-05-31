@@ -11,5 +11,7 @@ namespace hp_proj_1_backend.Dtos.JobDtos
         public string JobStatus { get; set; }
         public DateTime LimitLine { get; set; }
         public string FullPart { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
     }
 }

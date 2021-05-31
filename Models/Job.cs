@@ -14,6 +14,6 @@ namespace hp_proj_1_backend.Models
         public string FullPart { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-        
+         public User User { get; set; }
     }
 }

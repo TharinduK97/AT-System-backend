@@ -10,5 +10,13 @@ namespace hp_proj_1_backend.Data
             
         }
          public DbSet<Job> Jobs { get; set; }
+         public DbSet<User> Users { get; set; }
+
+
+          protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>()
+                .Property(user => user.Role).HasDefaultValue("Applicant");
+        }
     }
 }
