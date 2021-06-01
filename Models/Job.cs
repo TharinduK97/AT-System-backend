@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace hp_proj_1_backend.Models
 {
@@ -15,5 +16,6 @@ namespace hp_proj_1_backend.Models
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
          public User User { get; set; }
+         public List<AppliedJob> Applied_jobs { get; set; }
     }
 }

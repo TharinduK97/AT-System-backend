@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using hp_proj_1_backend.Data;
 
 namespace hp_proj_1_backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210601085417_appliedjob")]
+    partial class appliedjob
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -19,7 +21,7 @@ namespace hp_proj_1_backend.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.2");
 
-            modelBuilder.Entity("hp_proj_1_backend.Models.AppliedJob", b =>
+            modelBuilder.Entity("hp_proj_1_backend.Models.Applied_job", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -144,7 +146,7 @@ namespace hp_proj_1_backend.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("hp_proj_1_backend.Models.AppliedJob", b =>
+            modelBuilder.Entity("hp_proj_1_backend.Models.Applied_job", b =>
                 {
                     b.HasOne("hp_proj_1_backend.Models.Job", "Job")
                         .WithMany("Applied_jobs")
