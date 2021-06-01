@@ -12,5 +12,7 @@ namespace hp_proj_1_backend.Services.AppliedJobService
         Task<ServiceResponse<List<GetAppliedJobDto>>> AddAppliedJob(AddAppliedJobDto newApplliedJob);
       
         Task<ServiceResponse<List<GetAppliedJobDto>>> DeleteAppliedJob(int id);
+
+        Task<ServiceResponse<GetAppliedJobDto>> UpdateAppliedJob(UpdateAppliedJobDto updatedAppliedJob);
     }
 }

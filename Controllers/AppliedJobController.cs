@@ -42,9 +42,9 @@ namespace hp_proj_1_backend.Controllers
         }
         [Authorize(Roles = "Admin")]
         [HttpPut]
-        public async Task<ActionResult<ServiceResponse<GetAppliedJobDto>>> UpdateCharacter(UpdateJobDto updatedCharacter)
+        public async Task<ActionResult<ServiceResponse<GetAppliedJobDto>>> UpdateCharacter(UpdateAppliedJobDto updatedCharacter)
         {
-            var response = await _appliedJobService.UpdateJob(updatedCharacter);
+            var response = await _appliedJobService.UpdateAppliedJob(updatedCharacter);
             if (response.Data == null)
             {
                 return NotFound(response);
@@ -53,9 +53,9 @@ namespace hp_proj_1_backend.Controllers
         }
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
-        public async Task<ActionResult<ServiceResponse<List<GetJobDto>>>> Delete(int id)
+        public async Task<ActionResult<ServiceResponse<List<GetAppliedJobDto>>>> Delete(int id)
         {
-            var response = await _appliedJobService.DeleteJob(id);
+            var response = await _appliedJobService.DeleteAppliedJob(id);
             if (response.Data == null)
             {
                 return NotFound(response);

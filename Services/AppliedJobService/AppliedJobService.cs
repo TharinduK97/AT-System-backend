@@ -55,5 +55,10 @@ namespace hp_proj_1_backend.Services.AppliedJobService
         {
             throw new System.NotImplementedException();
         }
+
+        public Task<ServiceResponse<GetAppliedJobDto>> UpdateAppliedJob(UpdateAppliedJobDto updatedAppliedJob)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
