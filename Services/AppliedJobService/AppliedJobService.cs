@@ -46,14 +46,23 @@ namespace hp_proj_1_backend.Services.AppliedJobService
             throw new System.NotImplementedException();
         }
 
-        public Task<ServiceResponse<List<GetAppliedJobDto>>> GetAllAppliedJobs()
+        public async Task<ServiceResponse<List<GetAppliedJobDto>>> GetAllAppliedJobs()
         {
-            throw new System.NotImplementedException();
+            var serviceResponse = new ServiceResponse<List<GetAppliedJobDto>>();
+            var dbCharacters = await _context.AppliedJobs
+                .Where(c => c.User.ID == GetUserId()).ToListAsync();
+            serviceResponse.Data = dbCharacters.Select(c => _mapper.Map<GetAppliedJobDto>(c)).ToList();
+            return serviceResponse;
         }
 
-        public Task<ServiceResponse<GetAppliedJobDto>> GetAppliedJobsById(int id)
+        public async Task<ServiceResponse<GetAppliedJobDto>> GetAppliedJobsById(int id)
         {
-            throw new System.NotImplementedException();
+        var serviceResponse = new ServiceResponse<GetAppliedJobDto>();
+            var dbAppliedJob = await _context.AppliedJobs
+                .Include(c => c.Job)
+                .FirstOrDefaultAsync(c => c.ID == id && c.User.ID == GetUserId());
+            serviceResponse.Data = _mapper.Map<GetAppliedJobDto>(dbAppliedJob);
+            return serviceResponse;
         }
 
         public Task<ServiceResponse<GetAppliedJobDto>> UpdateAppliedJob(UpdateAppliedJobDto updatedAppliedJob)
