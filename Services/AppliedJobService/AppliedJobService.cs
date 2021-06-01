@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -41,9 +42,34 @@ namespace hp_proj_1_backend.Services.AppliedJobService
            
         }
 
-        public Task<ServiceResponse<List<GetAppliedJobDto>>> DeleteAppliedJob(int id)
+        public async Task<ServiceResponse<List<GetAppliedJobDto>>> DeleteAppliedJob(int id)
         {
-            throw new System.NotImplementedException();
+             var serviceResponse = new ServiceResponse<List<GetAppliedJobDto>>();
+            try
+            {
+                AppliedJob appliedJob = await _context.AppliedJobs
+                    .FirstOrDefaultAsync(c => c.ID == id && c.User.ID == GetUserId());
+                if (appliedJob != null)
+                {
+                    _context.AppliedJobs.Remove(appliedJob);
+                    await _context.SaveChangesAsync();
+
+                    serviceResponse.Data = _context.AppliedJobs
+                        .Where(c => c.User.ID == GetUserId())
+                        .Select(c => _mapper.Map<GetAppliedJobDto>(c)).ToList();
+                }
+                else
+                {
+                    serviceResponse.Success = false;
+                    serviceResponse.Message = "Character not found.";
+                }
+            }
+            catch (Exception ex)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = ex.Message;
+            }
+            return serviceResponse;
         }
 
         public async Task<ServiceResponse<List<GetAppliedJobDto>>> GetAllAppliedJobs()
@@ -65,9 +91,34 @@ namespace hp_proj_1_backend.Services.AppliedJobService
             return serviceResponse;
         }
 
-        public Task<ServiceResponse<GetAppliedJobDto>> UpdateAppliedJob(UpdateAppliedJobDto updatedAppliedJob)
+        public async Task<ServiceResponse<GetAppliedJobDto>> UpdateAppliedJob(UpdateAppliedJobDto updatedAppliedJob)
         {
-            throw new System.NotImplementedException();
+             var serviceResponse = new ServiceResponse<GetAppliedJobDto>();
+            try
+            {
+                AppliedJob appliedJob = await _context.AppliedJobs
+                    .Include(c => c.User)
+                    .FirstOrDefaultAsync(c => c.ID == updatedAppliedJob.ID);
+                if (appliedJob.User.ID == GetUserId())
+                {
+                   appliedJob.JobStatus = updatedAppliedJob.JobStatus;
+                   
+
+                    await _context.SaveChangesAsync();
+                    serviceResponse.Data = _mapper.Map<GetAppliedJobDto>(appliedJob);
+                }
+                else
+                {
+                    serviceResponse.Success = false;
+                    serviceResponse.Message = "Character not found.";
+                }
+            }
+            catch (Exception ex)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = ex.Message;
+            }
+            return serviceResponse;
         }
     }
 }
