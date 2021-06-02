@@ -29,7 +29,7 @@ namespace hp_proj_1_backend.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("JobID")
+                    b.Property<int>("JobID")
                         .HasColumnType("int");
 
                     b.Property<string>("JobStatus")
@@ -44,7 +44,7 @@ namespace hp_proj_1_backend.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Applied_Jobs");
+                    b.ToTable("AppliedJobs");
                 });
 
             modelBuilder.Entity("hp_proj_1_backend.Models.Job", b =>
@@ -148,10 +148,12 @@ namespace hp_proj_1_backend.Migrations
                 {
                     b.HasOne("hp_proj_1_backend.Models.Job", "Job")
                         .WithMany("Applied_jobs")
-                        .HasForeignKey("JobID");
+                        .HasForeignKey("JobID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("hp_proj_1_backend.Models.User", "User")
-                        .WithMany("Applied_jobs")
+                        .WithMany("AppliedJobs")
                         .HasForeignKey("UserID");
 
                     b.Navigation("Job");
@@ -175,7 +177,7 @@ namespace hp_proj_1_backend.Migrations
 
             modelBuilder.Entity("hp_proj_1_backend.Models.User", b =>
                 {
-                    b.Navigation("Applied_jobs");
+                    b.Navigation("AppliedJobs");
 
                     b.Navigation("Jobs");
                 });

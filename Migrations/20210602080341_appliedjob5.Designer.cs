@@ -10,8 +10,8 @@ using hp_proj_1_backend.Data;
 namespace hp_proj_1_backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210601090018_usermod01")]
-    partial class usermod01
+    [Migration("20210602080341_appliedjob5")]
+    partial class appliedjob5
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -34,6 +34,9 @@ namespace hp_proj_1_backend.Migrations
                     b.Property<int?>("JobID")
                         .HasColumnType("int");
 
+                    b.Property<int>("JobIn")
+                        .HasColumnType("int");
+
                     b.Property<string>("JobStatus")
                         .HasColumnType("nvarchar(max)");
 
@@ -46,7 +49,7 @@ namespace hp_proj_1_backend.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Applied_Jobs");
+                    b.ToTable("AppliedJobs");
                 });
 
             modelBuilder.Entity("hp_proj_1_backend.Models.Job", b =>

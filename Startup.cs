@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using hp_proj_1_backend.Data;
+using hp_proj_1_backend.Services.AppliedJobService;
 using hp_proj_1_backend.Services.JobService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -65,6 +66,7 @@ namespace hp_proj_1_backend
                     };
                 });
                 services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+                 services.AddScoped<IAppliedJobService, AppliedJobService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -25,21 +25,20 @@ namespace hp_proj_1_backend.Services.AppliedJobService
 
         }
         private int GetUserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+        private string GetUserRole() => _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Role);
 
         public async Task<ServiceResponse<List<GetAppliedJobDto>>> AddAppliedJob(AddAppliedJobDto newApplliedJob)
         {
             var serviceResponse = new ServiceResponse<List<GetAppliedJobDto>>();
             AppliedJob appliedJob = _mapper.Map<AppliedJob>(newApplliedJob);
-            appliedJob.User = await _context.Users.FirstOrDefaultAsync(u => u.ID == GetUserId());
-
+             appliedJob.User = await _context.Users.FirstOrDefaultAsync(u => u.ID == GetUserId());
             _context.AppliedJobs.Add(appliedJob);
             await _context.SaveChangesAsync();
             serviceResponse.Data = await _context.AppliedJobs
                 .Where(c => c.User.ID == GetUserId())
                 .Select(c => _mapper.Map<GetAppliedJobDto>(c)).ToListAsync();
             return serviceResponse;
-             throw new System.NotImplementedException();
-           
+             
         }
 
         public async Task<ServiceResponse<List<GetAppliedJobDto>>> DeleteAppliedJob(int id)
@@ -48,20 +47,20 @@ namespace hp_proj_1_backend.Services.AppliedJobService
             try
             {
                 AppliedJob appliedJob = await _context.AppliedJobs
-                    .FirstOrDefaultAsync(c => c.ID == id && c.User.ID == GetUserId());
+                    .FirstOrDefaultAsync(c => c.ID == id );
                 if (appliedJob != null)
                 {
                     _context.AppliedJobs.Remove(appliedJob);
                     await _context.SaveChangesAsync();
 
                     serviceResponse.Data = _context.AppliedJobs
-                        .Where(c => c.User.ID == GetUserId())
+                
                         .Select(c => _mapper.Map<GetAppliedJobDto>(c)).ToList();
                 }
                 else
                 {
                     serviceResponse.Success = false;
-                    serviceResponse.Message = "Character not found.";
+                    serviceResponse.Message = "Applied Job is not found.";
                 }
             }
             catch (Exception ex)
@@ -75,16 +74,24 @@ namespace hp_proj_1_backend.Services.AppliedJobService
         public async Task<ServiceResponse<List<GetAppliedJobDto>>> GetAllAppliedJobs()
         {
             var serviceResponse = new ServiceResponse<List<GetAppliedJobDto>>();
-            var dbCharacters = await _context.AppliedJobs
+            var dbCharacters =  GetUserRole().Equals("Admin") ?
+            await _context.AppliedJobs
+                .ToListAsync()
+            :await _context.AppliedJobs
                 .Where(c => c.User.ID == GetUserId()).ToListAsync();
             serviceResponse.Data = dbCharacters.Select(c => _mapper.Map<GetAppliedJobDto>(c)).ToList();
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<GetAppliedJobDto>> GetAppliedJobsById(int id)
+        public async Task<ServiceResponse<GetAppliedJobDto>> GetAppliedJobsById(int id) 
         {
         var serviceResponse = new ServiceResponse<GetAppliedJobDto>();
-            var dbAppliedJob = await _context.AppliedJobs
+            var dbAppliedJob =  GetUserRole().Equals("Admin") ?
+            await _context.AppliedJobs 
+                .Include(c => c.Job)
+                .FirstOrDefaultAsync(c => c.ID == id)
+             :
+             await _context.AppliedJobs
                 .Include(c => c.Job)
                 .FirstOrDefaultAsync(c => c.ID == id && c.User.ID == GetUserId());
             serviceResponse.Data = _mapper.Map<GetAppliedJobDto>(dbAppliedJob);
@@ -99,7 +106,7 @@ namespace hp_proj_1_backend.Services.AppliedJobService
                 AppliedJob appliedJob = await _context.AppliedJobs
                     .Include(c => c.User)
                     .FirstOrDefaultAsync(c => c.ID == updatedAppliedJob.ID);
-                if (appliedJob.User.ID == GetUserId())
+                if (GetUserRole().Equals("Admin"))
                 {
                    appliedJob.JobStatus = updatedAppliedJob.JobStatus;
                    
@@ -110,7 +117,7 @@ namespace hp_proj_1_backend.Services.AppliedJobService
                 else
                 {
                     serviceResponse.Success = false;
-                    serviceResponse.Message = "Character not found.";
+                    serviceResponse.Message = "Applied Job is not found.";
                 }
             }
             catch (Exception ex)

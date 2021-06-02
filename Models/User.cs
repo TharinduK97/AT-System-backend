@@ -20,6 +20,6 @@ namespace hp_proj_1_backend.Models
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
         public List<Job> Jobs { get; set; }
-        public List<AppliedJob> Applied_jobs { get; set; }
+        public List<AppliedJob> AppliedJobs { get; set; }
     }
 }

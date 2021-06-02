@@ -2,7 +2,7 @@
 
 namespace hp_proj_1_backend.Migrations
 {
-    public partial class usermod01 : Migration
+    public partial class appliedjob5 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

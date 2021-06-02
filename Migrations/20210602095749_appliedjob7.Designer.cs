@@ -10,8 +10,8 @@ using hp_proj_1_backend.Data;
 namespace hp_proj_1_backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210531110104_usermod_1")]
-    partial class usermod_1
+    [Migration("20210602095749_appliedjob7")]
+    partial class appliedjob7
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,34 @@ namespace hp_proj_1_backend.Migrations
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.2");
+
+            modelBuilder.Entity("hp_proj_1_backend.Models.AppliedJob", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("JobID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("JobStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UserID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("JobID");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("AppliedJobs");
+                });
 
             modelBuilder.Entity("hp_proj_1_backend.Models.Job", b =>
                 {
@@ -118,6 +146,23 @@ namespace hp_proj_1_backend.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("hp_proj_1_backend.Models.AppliedJob", b =>
+                {
+                    b.HasOne("hp_proj_1_backend.Models.Job", "Job")
+                        .WithMany("Applied_jobs")
+                        .HasForeignKey("JobID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("hp_proj_1_backend.Models.User", "User")
+                        .WithMany("AppliedJobs")
+                        .HasForeignKey("UserID");
+
+                    b.Navigation("Job");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("hp_proj_1_backend.Models.Job", b =>
                 {
                     b.HasOne("hp_proj_1_backend.Models.User", "User")
@@ -127,8 +172,15 @@ namespace hp_proj_1_backend.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("hp_proj_1_backend.Models.Job", b =>
+                {
+                    b.Navigation("Applied_jobs");
+                });
+
             modelBuilder.Entity("hp_proj_1_backend.Models.User", b =>
                 {
+                    b.Navigation("AppliedJobs");
+
                     b.Navigation("Jobs");
                 });
 #pragma warning restore 612, 618
