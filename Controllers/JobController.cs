@@ -33,6 +33,8 @@ namespace hp_proj_1_backend.Controllers
         {
             return Ok(await _jobservice.GetJobsById(id));
         }
+
+        
          [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<List<GetJobDto>>>> AddCharacter(AddJobDto newCharacter)

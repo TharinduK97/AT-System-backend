@@ -2,6 +2,7 @@ namespace hp_proj_1_backend.Dtos.UserDto
 {
     public class GetUserDetailsDto
     {
+         public string Role { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string ContactNum { get; set; }
