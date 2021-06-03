@@ -50,7 +50,7 @@ namespace hp_proj_1_backend.Services.JobService
             try
             {
                 Job job = await _context.Jobs
-                     .FirstOrDefaultAsync();
+                     .FirstOrDefaultAsync(c => c.ID == id);
                 if (job != null)
                 {
                     _context.Jobs.Remove(job);
