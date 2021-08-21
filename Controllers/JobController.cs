@@ -20,14 +20,14 @@ namespace hp_proj_1_backend.Controllers
             _jobservice = jobservice;
 
         }
-         [Authorize]
+        //  [Authorize]
          [HttpGet("GetAll")]
         public async Task<ActionResult<ServiceResponse<List<GetJobDto>>>> Get()
         {
             return Ok(await _jobservice.GetAllJobs());
         }
 
-         [Authorize(Roles = "Admin")]
+        //  [Authorize(Roles = "Admin")]
         [HttpGet("{id}")]
         public async Task<ActionResult<ServiceResponse<GetJobDto>>> GetSingle(int id)
         {
@@ -37,21 +37,23 @@ namespace hp_proj_1_backend.Controllers
         
          [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<List<GetJobDto>>>> AddCharacter(AddJobDto newCharacter)
+        public async Task<ActionResult<ServiceResponse<List<GetJobDto>>>> AddJob(AddJobDto newjob)
         {
-            return Ok(await  _jobservice.AddJob(newCharacter));
+            return Ok(await  _jobservice.AddJob(newjob));
         }
+        
          [Authorize(Roles = "Admin")]
         [HttpPut]
-        public async Task<ActionResult<ServiceResponse<GetJobDto>>> UpdateCharacter(UpdateJobDto updatedCharacter)
+        public async Task<ActionResult<ServiceResponse<GetJobDto>>> UpdateJob(UpdateJobDto updatedJob)
         {
-            var response = await _jobservice.UpdateJob(updatedCharacter);
+            var response = await _jobservice.UpdateJob(updatedJob);
             if(response.Data == null)
             {
                 return NotFound(response);
             }
             return Ok(response);
         }
+
          [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<ActionResult<ServiceResponse<List<GetJobDto>>>> Delete(int id)

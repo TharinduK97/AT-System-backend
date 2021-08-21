@@ -28,7 +28,7 @@ namespace hp_proj_1_backend.Controllers
             return Ok(await _userService.GetAllUsers());
         }
 
-        //  [Authorize]
+        //   [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<ServiceResponse<GetUserDetailsDto>>> GetSingle(int id)
         {

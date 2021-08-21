@@ -39,7 +39,7 @@ namespace hp_proj_1_backend.Services.JobService
             _context.Jobs.Add(job);
             await _context.SaveChangesAsync();
             serviceResponse.Data = await _context.Jobs
-                // .Where(c => c.User.Id == GetUserId())
+                 .Where(c => c.User.ID == GetUserId())
                 .Select(c => _mapper.Map<GetJobDto>(c)).ToListAsync();
             return serviceResponse;
         }

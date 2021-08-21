@@ -3,28 +3,30 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using hp_proj_1_backend.Data;
 
 namespace hp_proj_1_backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210813071758_initsecond")]
+    partial class initsecond
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.9")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "5.0.2");
 
             modelBuilder.Entity("hp_proj_1_backend.Models.AppliedJob", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -47,33 +49,12 @@ namespace hp_proj_1_backend.Migrations
                     b.ToTable("AppliedJobs");
                 });
 
-            modelBuilder.Entity("hp_proj_1_backend.Models.Cv", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Cvpath")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserID")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("UserID")
-                        .IsUnique();
-
-                    b.ToTable("Cvs");
-                });
-
             modelBuilder.Entity("hp_proj_1_backend.Models.Job", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -117,7 +98,7 @@ namespace hp_proj_1_backend.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Bio")
                         .HasColumnType("nvarchar(max)");
@@ -182,17 +163,6 @@ namespace hp_proj_1_backend.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("hp_proj_1_backend.Models.Cv", b =>
-                {
-                    b.HasOne("hp_proj_1_backend.Models.User", "User")
-                        .WithOne("Cv")
-                        .HasForeignKey("hp_proj_1_backend.Models.Cv", "UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("hp_proj_1_backend.Models.Job", b =>
                 {
                     b.HasOne("hp_proj_1_backend.Models.User", "User")
@@ -210,8 +180,6 @@ namespace hp_proj_1_backend.Migrations
             modelBuilder.Entity("hp_proj_1_backend.Models.User", b =>
                 {
                     b.Navigation("AppliedJobs");
-
-                    b.Navigation("Cv");
 
                     b.Navigation("Jobs");
                 });

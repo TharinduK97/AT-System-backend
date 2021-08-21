@@ -12,6 +12,7 @@ namespace hp_proj_1_backend.Data
          public DbSet<Job> Jobs { get; set; }
          public DbSet<User> Users { get; set; }
          public DbSet<AppliedJob> AppliedJobs { get; set; }
+         public DbSet<Cv> Cvs { get; set; }
 
 
           protected override void OnModelCreating(ModelBuilder modelBuilder)

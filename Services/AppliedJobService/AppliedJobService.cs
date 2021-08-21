@@ -76,9 +76,12 @@ namespace hp_proj_1_backend.Services.AppliedJobService
             var serviceResponse = new ServiceResponse<List<GetAppliedJobDto>>();
             var dbCharacters =  GetUserRole().Equals("Admin") ?
             await _context.AppliedJobs
+                
                 .ToListAsync()
             :await _context.AppliedJobs
+              
                 .Where(c => c.User.ID == GetUserId()).ToListAsync();
+                  
             serviceResponse.Data = dbCharacters.Select(c => _mapper.Map<GetAppliedJobDto>(c)).ToList();
             return serviceResponse;
         }
@@ -88,7 +91,7 @@ namespace hp_proj_1_backend.Services.AppliedJobService
         var serviceResponse = new ServiceResponse<GetAppliedJobDto>();
             var dbAppliedJob =  GetUserRole().Equals("Admin") ?
             await _context.AppliedJobs 
-                .Include(c => c.Job)
+                 .Include(c => c.Job)
                 .FirstOrDefaultAsync(c => c.ID == id)
              :
              await _context.AppliedJobs

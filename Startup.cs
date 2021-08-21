@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -7,15 +8,18 @@ using hp_proj_1_backend.Data;
 using hp_proj_1_backend.Services.AppliedJobService;
 using hp_proj_1_backend.Services.JobService;
 using hp_proj_1_backend.Services.UserService;
+using hp_proj_1_backend_master.Services.CvService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -36,6 +40,29 @@ namespace hp_proj_1_backend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+
+                        builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                    });
+
+                options.AddPolicy("MyCORSPolicy",
+                    builder =>
+                    {
+                        builder.WithOrigins(Configuration.GetSection("AllowedOrigins").Get<string[]>())
+                                            .AllowAnyHeader()
+                                            .AllowAnyMethod();
+                    });
+
+            });
+
             services.AddDbContext<DataContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllers();
@@ -52,8 +79,14 @@ namespace hp_proj_1_backend
                 });
                  c.OperationFilter<SecurityRequirementsOperationFilter>();
             });
+            services.Configure<FormOptions>(o => {
+    o.ValueLengthLimit = int.MaxValue;
+    o.MultipartBodyLengthLimit = int.MaxValue;
+    o.MemoryBufferThreshold = int.MaxValue;
+            });
             services.AddAutoMapper(typeof(Startup));
              services.AddScoped<IJobService, JobService>();
+              services.AddScoped<ICvService, CvService>();
              services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -83,8 +116,17 @@ namespace hp_proj_1_backend
 
             app.UseHttpsRedirection();
 
+             app.UseStaticFiles();
+    app.UseStaticFiles(new StaticFileOptions()
+    {
+        FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Resources")),
+        RequestPath = new PathString("/Resources")
+    });
+
             app.UseRouting();
 
+            app.UseCors("MyCORSPolicy");
+            
             app.UseAuthentication();
             
             app.UseAuthorization();

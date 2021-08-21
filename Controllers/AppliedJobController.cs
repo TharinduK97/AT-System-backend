@@ -34,12 +34,15 @@ namespace hp_proj_1_backend.Controllers
         {
             return Ok(await _appliedJobService.GetAppliedJobsById(id));
         }
-        [Authorize]
+
+         [Authorize]
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<List<GetAppliedJobDto>>>> AddAppliedJob(AddAppliedJobDto newAppliedJob)
         {
             return Ok(await _appliedJobService.AddAppliedJob(newAppliedJob));
         }
+
+
         [Authorize(Roles = "Admin")]
         [HttpPut]
         public async Task<ActionResult<ServiceResponse<GetAppliedJobDto>>> UpdateCharacter(UpdateAppliedJobDto updatedCharacter)
