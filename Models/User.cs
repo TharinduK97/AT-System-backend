@@ -22,5 +22,10 @@ namespace hp_proj_1_backend.Models
         public List<Job> Jobs { get; set; }
         public List<AppliedJob> AppliedJobs { get; set; }
         public Cv Cv { get; set; }
+
+        public static implicit operator int(User v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

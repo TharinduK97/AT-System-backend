@@ -32,3 +32,6 @@ Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;
   "email": "tharindu123@gmail.com",
   "gender": "male"
 }
+
+
+https://localhost:5001/Resources//Cvs//New%20Text%20Document.txt

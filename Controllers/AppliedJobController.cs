@@ -35,7 +35,7 @@ namespace hp_proj_1_backend.Controllers
             return Ok(await _appliedJobService.GetAppliedJobsById(id));
         }
 
-         [Authorize]
+          [Authorize]
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<List<GetAppliedJobDto>>>> AddAppliedJob(AddAppliedJobDto newAppliedJob)
         {

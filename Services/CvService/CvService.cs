@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using hp_proj_1_backend.Data;
+using hp_proj_1_backend.Dtos.UserDto;
 using hp_proj_1_backend.Models;
 using hp_proj_1_backend_master.Dtos.CvDto;
 using Microsoft.AspNetCore.Http;
@@ -31,29 +32,76 @@ namespace hp_proj_1_backend_master.Services.CvService
         private string GetUserRole() => _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Role);
 
 
-        public async Task<ServiceResponse<List<GetCvDto>>> AddCv(AddCvDto newCv)
+        public async Task<ServiceResponse<GetUserDetailsDto>> AddCv(AddCvDto newCv)
         {
-           var serviceResponse = new ServiceResponse<List<GetCvDto>>();
-            Cv cv = _mapper.Map<Cv>(newCv);
-                cv.User = await _context.Users.FirstOrDefaultAsync(u => u.ID == GetUserId());
+          //  var response = new ServiceResponse<List<GetCvDto>>();
+        //     Cv cv = _mapper.Map<Cv>(newCv);
+        //          cv.User= await _context.Users.FirstOrDefaultAsync(u => u.ID == GetUserId());
+                
+        //     _context.Cvs.Add(cv);
+        //     await _context.SaveChangesAsync();
+        //     serviceResponse.Data = await _context.Cvs
+        //          .Where(c => c.User.ID == GetUserId())
+        //         .Select(c => _mapper.Map<GetCvDto>(c)).ToListAsync();
+        //     return serviceResponse;
 
-            _context.Cvs.Add(cv);
-            await _context.SaveChangesAsync();
-            serviceResponse.Data = await _context.Cvs
-                 .Where(c => c.User.ID == GetUserId())
-                .Select(c => _mapper.Map<GetCvDto>(c)).ToListAsync();
-            return serviceResponse;
+
+            var response = new ServiceResponse<GetUserDetailsDto>();
+            try
+            {
+                
+                 Cv cv = _mapper.Map<Cv>(newCv);
+                 User user= await _context.Users.FirstOrDefaultAsync(u => u.ID == GetUserId());
+                 cv.UserID=user.ID;
+                 if (user == null)
+                {
+                    response.Success = false;
+                    response.Message = "User not found.";
+                    return response;
+                }
+
+                _context.Cvs.Add(cv);
+                await _context.SaveChangesAsync();
+                
+                 response.Data = _mapper.Map<GetUserDetailsDto>(user);
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+            }
+            return response;
+        
+            
         }
 
         public async Task<ServiceResponse<GetCvDto>> GetCvsById()
         {
             
-            var serviceResponse = new ServiceResponse<GetCvDto>();
-            var dbCv = await _context.Cvs
+             var serviceResponse = new ServiceResponse<GetCvDto>();
+            // var dbCv = await _context.Cvs
+
+            //      .FirstOrDefaultAsync(c => c.UserID == GetUserId());
+
+            // serviceResponse.Data = _mapper.Map<GetCvDto>(dbCv);
+            // return serviceResponse;
+
+            try
+            {
+                
+                  var dbCv = await _context.Cvs
 
                  .FirstOrDefaultAsync(c => c.UserID == GetUserId());
 
             serviceResponse.Data = _mapper.Map<GetCvDto>(dbCv);
+                
+                 
+            }
+            catch (Exception ex)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = ex.Message;
+            }
             return serviceResponse;
         }
 
@@ -64,7 +112,7 @@ namespace hp_proj_1_backend_master.Services.CvService
             {
                 Cv cv = await _context.Cvs
                      .Include(c => c.User)
-                    .FirstOrDefaultAsync(c => c.ID == updatedCv.ID);
+                    .FirstOrDefaultAsync(c => c.UserID == GetUserId());
                 if (cv.User.Role == GetUserRole())
                 {
                     cv.Cvpath = updatedCv.Cvpath;
@@ -86,5 +134,7 @@ namespace hp_proj_1_backend_master.Services.CvService
             return serviceResponse;
  
         }
+
+        
     }
 }

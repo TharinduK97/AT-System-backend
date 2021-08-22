@@ -38,7 +38,7 @@ namespace hp_proj_1_backend_master.Controllers
             return Ok(await  _cvservice.AddCv(newcv));
         }
 
-        //  [Authorize(Roles = "Applicant")]
+          [Authorize(Roles = "Applicant")]
         [HttpPut]
         public async Task<ActionResult<ServiceResponse<GetCvDto>>> UpdateCv(UpdateCvDto updatedCv)
         {
