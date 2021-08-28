@@ -31,6 +31,13 @@ namespace hp_proj_1_backend_master.Controllers
             return Ok(await _cvservice.GetCvsById());
         }
 
+        [HttpGet("{id}")]
+         public async Task<ActionResult<ServiceResponse<GetCvDto>>> GetUserCvByID(int id)
+        {
+            return Ok(await _cvservice.GetUserCvsById(id));
+        }
+
+
         //  [Authorize(Roles = "Applicant")]
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<List<GetCvDto>>>> AddCv(AddCvDto newcv)

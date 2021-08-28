@@ -56,7 +56,10 @@ namespace hp_proj_1_backend.Services.UserService
         public async Task<ServiceResponse<List<GetUserDetailsDto>>> GetAllUsers()
         {
             var serviceResponse = new ServiceResponse<List<GetUserDetailsDto>>();
-            var dbUsers = await _context.Users.ToListAsync(); 
+            var dbUsers = await _context.Users
+            .Include(c => c.AppliedJobs)
+           
+            .ToListAsync(); 
             serviceResponse.Data = dbUsers.Select(c => _mapper.Map<GetUserDetailsDto>(c)).ToList();
             return serviceResponse;
         }

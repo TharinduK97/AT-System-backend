@@ -135,6 +135,33 @@ namespace hp_proj_1_backend_master.Services.CvService
  
         }
 
-        
+        public async Task<ServiceResponse<GetCvDto>> GetUserCvsById(int id)
+        {
+           var serviceResponse = new ServiceResponse<GetCvDto>();
+            // var dbCv = await _context.Cvs
+
+            //      .FirstOrDefaultAsync(c => c.UserID == GetUserId());
+
+            // serviceResponse.Data = _mapper.Map<GetCvDto>(dbCv);
+            // return serviceResponse;
+
+            try
+            {
+                
+                  var dbCv = await _context.Cvs
+
+                 .FirstOrDefaultAsync(c => c.UserID == id);
+
+            serviceResponse.Data = _mapper.Map<GetCvDto>(dbCv);
+                
+                 
+            }
+            catch (Exception ex)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = ex.Message;
+            }
+            return serviceResponse;
+        }
     }
 }

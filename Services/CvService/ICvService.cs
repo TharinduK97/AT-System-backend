@@ -9,6 +9,8 @@ namespace hp_proj_1_backend_master.Services.CvService
     public interface ICvService
     {
          Task<ServiceResponse<GetCvDto>> GetCvsById();
+
+          Task<ServiceResponse<GetCvDto>> GetUserCvsById(int id);
         Task<ServiceResponse<GetUserDetailsDto>> AddCv(AddCvDto newCv);
         Task<ServiceResponse<GetCvDto>> UpdateCv(UpdateCvDto updatedCv);
     }
