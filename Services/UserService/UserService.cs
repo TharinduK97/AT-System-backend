@@ -57,7 +57,7 @@ namespace hp_proj_1_backend.Services.UserService
         {
             var serviceResponse = new ServiceResponse<List<GetUserDetailsDto>>();
             var dbUsers = await _context.Users
-            .Include(c => c.AppliedJobs)
+            // .Include(c => c.AppliedJobs)
            
             .ToListAsync(); 
             serviceResponse.Data = dbUsers.Select(c => _mapper.Map<GetUserDetailsDto>(c)).ToList();
@@ -68,7 +68,7 @@ namespace hp_proj_1_backend.Services.UserService
         {
             var serviceResponse = new ServiceResponse<GetUserDetailsDto>();
             var dbUser = await _context.Users
-                    .Include(c => c.AppliedJobs)
+            .Include(c => c.AppliedJobs)
                  .FirstOrDefaultAsync(c => c.ID == id);
 
             serviceResponse.Data = _mapper.Map<GetUserDetailsDto>(dbUser);

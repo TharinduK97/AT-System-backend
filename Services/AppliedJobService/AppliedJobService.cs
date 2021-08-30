@@ -32,7 +32,6 @@ namespace hp_proj_1_backend.Services.AppliedJobService
             var serviceResponse = new ServiceResponse<List<GetAppliedJobDto>>();
             AppliedJob appliedJob = _mapper.Map<AppliedJob>(newApplliedJob);
              appliedJob.User = await _context.Users.FirstOrDefaultAsync(u => u.ID == GetUserId());
-             appliedJob.Job = await _context.Jobs.FirstOrDefaultAsync(u => u.ID == newApplliedJob.JobID);
             _context.AppliedJobs.Add(appliedJob);
             await _context.SaveChangesAsync();
             serviceResponse.Data = await _context.AppliedJobs
@@ -92,11 +91,12 @@ namespace hp_proj_1_backend.Services.AppliedJobService
         var serviceResponse = new ServiceResponse<GetAppliedJobDto>();
             var dbAppliedJob =  GetUserRole().Equals("Admin") ?
             await _context.AppliedJobs 
-                 .Include(c => c.Job)
+                //   .Include(c => c.Job)
+                   .Include(c => c.User)
                 .FirstOrDefaultAsync(c => c.ID == id)
              :
              await _context.AppliedJobs
-                .Include(c => c.Job)
+                // .Include(c => c.Job)
                 .FirstOrDefaultAsync(c => c.ID == id && c.User.ID == GetUserId());
             serviceResponse.Data = _mapper.Map<GetAppliedJobDto>(dbAppliedJob);
             return serviceResponse;

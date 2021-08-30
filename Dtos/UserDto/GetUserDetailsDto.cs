@@ -18,7 +18,7 @@ namespace hp_proj_1_backend.Dtos.UserDto
         public string Bio { get; set; }
         public string Email { get; set; }
         public string Gender { get; set; }
-        public List<GetAppliedJobDto> AppliedJobs { get; set; }
+        // public List<GetAppliedJobDto> AppliedJobs { get; set; }
        
     }
 }
