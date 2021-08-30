@@ -9,6 +9,8 @@ using hp_proj_1_backend.Services.AppliedJobService;
 using hp_proj_1_backend.Services.JobService;
 using hp_proj_1_backend.Services.UserService;
 using hp_proj_1_backend_master.Services.CvService;
+using hp_proj_1_backend_master.Services.MailService;
+using hp_proj_1_backend_master.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -99,6 +101,8 @@ namespace hp_proj_1_backend
                         ValidateAudience = false
                     };
                 });
+                 services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
+            services.AddTransient<IMailService, MailService>();
                 services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
                  services.AddScoped<IAppliedJobService, AppliedJobService>();
                   services.AddScoped<IUserService, UserService>();
